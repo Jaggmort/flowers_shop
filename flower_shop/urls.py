@@ -1,25 +1,18 @@
 """
 URL configuration for flower_shop project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
 from django.urls import path, include
 from flower_shop_site import views
 
 urlpatterns = [
-    path('', views.index, name='Главная'),
+    path('', views.index, name='index'),
+    path('catalog/', views.show_catalog, name='catalog'),
+    path('quiz-step/', views.quiz_step, name='quiz-step'),
+    path('quiz/', views.quiz, name='quiz'),
+    path('result/', views.show_quiz_result, name='result'),
+    path('order/', views.make_order, name='make_order'),
+    path('consultation/', views.order_consultation, name='consultation'),
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
