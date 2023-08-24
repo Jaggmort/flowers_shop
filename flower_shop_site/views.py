@@ -1,14 +1,30 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .models import Bouquet
 
 
 def index(request):
-    context = {}
+    bouquets = Bouquet.objects.order_by('?')[:3]
+    context = {
+        'is_index_page': True,
+        'bouquets': bouquets
+    }
     return render(request, 'index.html', context)
 
 
 def show_catalog(request):
-    context = {}
-    return render(request, 'catalog.html', context)
+    bouquet_list = Bouquet.objects.all()
+    paginator = Paginator(bouquet_list, 6)
+
+    page = request.GET.get('page')
+    try:
+        bouquets = paginator.page(page)
+    except PageNotAnInteger:
+        bouquets = paginator.page(1)
+    except EmptyPage:
+        bouquets = paginator.page(paginator.num_pages)
+
+    return render(request, 'catalog.html', context={'bouquets': bouquets})
 
 
 def quiz_step(request):
