@@ -1,15 +1,17 @@
 from django.contrib import admin
 from .models import Bouquet, Tag, Order, Delivery, Consultation
 
+class BouquetInline(admin.TabularInline):
+    model = Bouquet.tags.through
+    extra = 0
 
 @admin.register(Bouquet)
 class BouquetAdmin(admin.ModelAdmin):
     pass
 
-
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    pass
+    inlines = [BouquetInline, ]
 
 
 @admin.register(Order)
