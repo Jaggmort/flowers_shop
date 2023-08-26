@@ -53,6 +53,12 @@ def accept_payment(request):
     return render(request, 'index.html')
 
 
+def accept_payment1(request):
+    with open('test.txt', 'w') as file:
+        file.write('whatever')
+    return render(request, 'index.html')
+
+
 def make_order_step(request):
     dotenv.load_dotenv('.env')
     Configuration.account_id = os.environ['SHOP_ACCOUNT_ID']

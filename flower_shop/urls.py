@@ -15,6 +15,7 @@ urlpatterns = [
     path('result/', views.show_quiz_result, name='result'),
     path('order/', views.make_order, name='make_order'),
     path('accept_payment/', views.accept_payment, name='accept_payment'),
+    path('accept_payment1/', views.accept_payment1, name='accept_payment1'),
     path('order-step/', views.make_order_step, name='make_order_step'),
     path('consultation/', views.order_consultation, name='consultation'),
     path('admin/', admin.site.urls),
