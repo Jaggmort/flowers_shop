@@ -5,3 +5,4 @@ phonenumbers==8.13.19
 environs==9.5.0
 pillow==10.0.0
 python-telegram-bot==13.15
+yookassa==2.4.0
