@@ -20,6 +20,7 @@ SECRET_KEY = env.str('SECRET_KEY', 'REPLACE_ME')
 DEBUG = env.bool('DEBUG', True)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1'])
+CSRF_TRUSTED_ORIGINS = ['https://jaggmort.ru']
 
 #Notification bot settings
 TELEGRAM_BOT_TOKEN = env.str('TELEGRAM_BOT_TOKEN')
