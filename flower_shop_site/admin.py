@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Bouquet, Tag, Order, Delivery, Consultation
+from .models import Bouquet, Tag, Order, Consultation
 
 class BouquetInline(admin.TabularInline):
     model = Bouquet.tags.through
@@ -16,11 +16,6 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Delivery)
-class DeliveryAdmin(admin.ModelAdmin):
     pass
 
 

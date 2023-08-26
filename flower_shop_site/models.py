@@ -53,6 +53,14 @@ class Bouquet(models.Model):
 
 
 class Order(models.Model):
+    PREFERRED_DELIVERY_TIME = [
+        ('Как можно скорее', 'Как можно скорее'),
+        ('с 10:00 до 12:00', 'с 10:00 до 12:00'),
+        ('с 12:00 до 14:00', 'с 12:00 до 14:00'),
+        ('с 14:00 до 16:00', 'с 14:00 до 16:00'),
+        ('с 16:00 до 18:00', 'с 16:00 до 18:00'),
+        ('с 18:00 до 20:00', 'с 18:00 до 20:00'),
+    ]
     created_at = models.DateTimeField(
         verbose_name='Время создания заказа',
         default=timezone.now,
@@ -63,6 +71,25 @@ class Order(models.Model):
         verbose_name='Заказанный букет',
         related_name='bouquet',
         on_delete=models.RESTRICT
+    )
+    client_name = models.CharField(
+        verbose_name='Имя клиента',
+        max_length=200,
+        null=True, blank=True
+    )
+    phone_number = PhoneNumberField(
+        verbose_name='Телефон',
+        null=True, blank=True
+    )
+    delivery_time = models.CharField(
+        verbose_name='Предпочитаемое время доставки',
+        choices=PREFERRED_DELIVERY_TIME,
+        max_length=16,
+        null=True, blank=True
+    )
+    address = models.TextField(
+        verbose_name='Адрес доставки',
+        null=True, blank=True
     )
     is_payed = models.BooleanField(
         verbose_name='Оплачен',
@@ -79,47 +106,7 @@ class Order(models.Model):
         ordering = ['created_at']
 
 
-class Delivery(models.Model):
-    PREFERRED_DELIVERY_TIME = [
-        ('Как можно скорее', 'Как можно скорее'),
-        ('с 10:00 до 12:00', 'с 10:00 до 12:00'),
-        ('с 12:00 до 14:00', 'с 12:00 до 14:00'),
-        ('с 14:00 до 16:00', 'с 14:00 до 16:00'),
-        ('с 16:00 до 18:00', 'с 16:00 до 18:00'),
-        ('с 18:00 до 20:00', 'с 18:00 до 20:00'),
-    ]
-    order = models.ForeignKey(
-        to=Order,
-        verbose_name='Заказ для доставки',
-        related_name='order',
-        on_delete=models.RESTRICT
-    )
-    client_name = models.CharField(
-        verbose_name='Имя клиента',
-        max_length=200
-    )
-    phone_number = PhoneNumberField(
-        verbose_name='Телефон'
-    )
-    delivery_time = models.CharField(
-        verbose_name='Предпочитаемое время доставки',
-        choices=PREFERRED_DELIVERY_TIME,
-        max_length=16
-    )
-    address = models.TextField(
-        verbose_name='Адрес доставки'
-    )
-
-    def __str__(self) -> str:
-        return f'Доставка {self.order}, {self.delivery_time}\
-            телефон: {self.phone_number}, адрес: {self.address}'
-
-    class Meta:
-        verbose_name = 'Заказ на доставку'
-        verbose_name_plural = 'Заказы на доставку'
-
-
-@receiver(post_save, sender=Delivery)
+@receiver(post_save, sender=Order)
 def report_courier(sender, created, instance, **kwargs):
     print('Новый Заказ')
     pass
