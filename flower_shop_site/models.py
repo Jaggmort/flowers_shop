@@ -3,6 +3,8 @@ from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.conf import settings
+from .notifications_bot import send_notification, unify_phone
 
 
 class Tag(models.Model):
@@ -95,6 +97,10 @@ class Order(models.Model):
         verbose_name='Оплачен',
         default=False
     )
+    is_notification_sent = models.BooleanField(
+        verbose_name='Отправлено сообщение курьеру',
+        default=False
+    )
 
     def __str__(self) -> str:
         return f'{self.created_at.strftime("%Y-%m-%d %H:%M")} - \
@@ -108,8 +114,19 @@ class Order(models.Model):
 
 @receiver(post_save, sender=Order)
 def report_courier(sender, created, instance, **kwargs):
-    print('Новый Заказ')
-    pass
+    if instance.is_payed and instance.is_notification_sent == False:
+        message = '*Новый заказ!*\n'\
+                 f'Букет: {instance.bouquet}\n'\
+                 f'Имя клиента: {instance.client_name}\n'\
+                 f'Телефон: `{unify_phone(instance.phone_number)}`\n'\
+                 f'Предпочитаемое время доставки:\n*{instance.delivery_time}*\n'\
+                 f'Адрес: `{instance.address}`'
+        send_notification(
+            settings.COURIER_TG_ID,
+            message
+        )
+        instance.is_notification_sent = True
+        instance.save()
     # послать сообщение курьеру
 
 
@@ -120,6 +137,10 @@ class Consultation(models.Model):
     )
     phone_number = PhoneNumberField(
         verbose_name='Телефон'
+    )
+    is_notification_sent = models.BooleanField(
+        verbose_name='Отправлено сообщение консультанту',
+        default=False
     )
 
     def __str__(self) -> str:
@@ -133,6 +154,14 @@ class Consultation(models.Model):
 
 @receiver(post_save, sender=Consultation)
 def report_consultant(sender, created, instance, **kwargs):
-    print('Новая консультация')
-    pass
+    if instance.is_notification_sent == False:
+        message = '*Запрос на консультацию!*\n'\
+                f'Имя клиента: *{instance.client_name}*\n'\
+                f'Телефон: `{unify_phone(instance.phone_number)}`'
+        send_notification(
+            settings.CONSULTANT_TG_IG,
+            message
+        )
+        instance.is_notification_sent = True
+        instance.save()
     # послать сообщение консультанту

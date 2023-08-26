@@ -21,7 +21,11 @@ DEBUG = env.bool('DEBUG', True)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1'])
 
-
+#Notification bot settings
+TELEGRAM_BOT_TOKEN = env.str('TELEGRAM_BOT_TOKEN')
+COURIER_TG_ID = env.str('COURIER_TG_ID')
+CONSULTANT_TG_IG = env.str('CONSULTANT_TG_IG')
+ 
 # Application definition
 
 INSTALLED_APPS = [
