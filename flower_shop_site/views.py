@@ -2,8 +2,9 @@ import os
 import dotenv
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .models import Bouquet, Consultation, Order
+from .notifications_bot import unify_phone
 from yookassa import Configuration, Payment
-from .models import Order, Bouquet
 
 
 def index(request):
@@ -12,10 +13,21 @@ def index(request):
         'is_index_page': True,
         'bouquets': bouquets
     }
+    if request.method == 'POST':
+        client_name = request.POST['fname']
+        phone_number = unify_phone(request.POST['tel'])
+        if phone_number:
+            Consultation.objects.create(
+                client_name=client_name,
+                phone_number=phone_number
+            )
+            context['sign_up'] = 'success'
+
     return render(request, 'index.html', context)
 
 
 def show_catalog(request):
+    context = {}
     bouquet_list = Bouquet.objects.all()
     paginator = Paginator(bouquet_list, 6)
 
@@ -26,8 +38,19 @@ def show_catalog(request):
         bouquets = paginator.page(1)
     except EmptyPage:
         bouquets = paginator.page(paginator.num_pages)
+    context['bouquets'] = bouquets
 
-    return render(request, 'catalog.html', context={'bouquets': bouquets})
+    if request.method == 'POST':
+        client_name = request.POST['fname']
+        phone_number = unify_phone(request.POST['tel'])
+        if phone_number:
+            Consultation.objects.create(
+                client_name=client_name,
+                phone_number=phone_number
+            )
+            context['sign_up'] = 'success'
+
+    return render(request, 'catalog.html', context)
 
 
 def quiz_step(request):
@@ -96,4 +119,14 @@ def make_order_step(request):
 
 
 def order_consultation(request):
-    return render(request, 'consultation.html')
+    context = {}
+    if request.method == 'POST':
+        client_name = request.POST['fname']
+        phone_number = unify_phone(request.POST['tel'])
+        if phone_number:
+            Consultation.objects.create(
+                client_name=client_name,
+                phone_number=phone_number
+            )
+            context['sign_up'] = 'success'
+    return render(request, 'consultation.html', context)
