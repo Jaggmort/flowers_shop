@@ -19,4 +19,4 @@ def unify_phone(raw_input: str):
         unified_phone_number = f"+7 ({''.join(only_numbers[:3])}) {''.join(only_numbers[3:6])}-{''.join(only_numbers[6:8])}-{''.join(only_numbers[8:10])}"
         return unified_phone_number
     else:
-        return raw_input
+        return False

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Bouquet
+from .models import Bouquet, Consultation
+from .notifications_bot import unify_phone
 
 
 def index(request):
@@ -44,4 +45,14 @@ def make_order(request):
 
 
 def order_consultation(request):
-    return render(request, 'consultation.html')
+    context = {}
+    if request.method == 'POST':
+        client_name = request.POST['fname']
+        phone_number = unify_phone(request.POST['tel'])
+        if phone_number:
+            Consultation.objects.create(
+                client_name=client_name,
+                phone_number=phone_number
+            )
+            context['sign_up'] = 'success'
+    return render(request, 'consultation.html', context)
