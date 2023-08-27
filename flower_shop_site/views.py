@@ -158,7 +158,7 @@ def make_order_step(request):
             )
         payment = Payment.create({
             "amount": {
-                "value": "100.00",
+                "value": bouquet.price,
                 "currency": "RUB"
             },
             "confirmation": {
@@ -166,7 +166,7 @@ def make_order_step(request):
                 "return_url": "https://www.jaggmort.ru/accept_payment",
             },
             "capture": True,
-            "description": "Заказ №37",
+            "description": f"Заказ №{order.id}",
             "metadata": {
                 "order_id": order.id
             }
