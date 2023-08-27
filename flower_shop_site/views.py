@@ -49,14 +49,17 @@ def index(request):
 
 def show_catalog(request):
     context = {}
-    bouquet_list = Bouquet.objects.all()
+    bouquet_list = Bouquet.objects.all().order_by('-price')
     paginator = Paginator(bouquet_list, 6)
+    print(paginator.num_pages)
 
     page = request.GET.get('page')
+    print(page)
     try:
         bouquets = paginator.page(page)
     except PageNotAnInteger:
         bouquets = paginator.page(1)
+        print(bool(bouquets.has_next))
     except EmptyPage:
         bouquets = paginator.page(paginator.num_pages)
     context['bouquets'] = bouquets
