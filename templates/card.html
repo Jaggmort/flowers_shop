@@ -10,18 +10,18 @@ Flower Shop - Букет
 	<div class="container">
 		<div class="card ficb">
 			<div class="card__block card__block_first">
-				<img src="{% static 'img/cardImg.jpg' %}" alt="img" class="card__img">
+				<img src="{{ bouquet.image }}" alt="img" class="card__img">
 			</div>
 			<div class="card__block card__block_sec">
-				<div class="title">Летнее утро</div>
-				<div class="card__block_price">3 600 руб</div>
+				<div class="title">{{ bouquet.title }}</div>
+				<div class="card__block_price">{{ bouquet.price }} руб</div>
 				<div class="card__elems ">
 					<span class="card__elems_intro">Состав</span>
 					<div class="card__items">
-						<span class="card_items_intro">
-							Гортензия розовая - 1 шт.
-						</span>
-						<span class="card_items_intro">
+						<p class="card_items_intro">
+							{{ bouquet.composition }}
+						</p>
+						<!-- <span class="card_items_intro">
 							Ветки эквалипта - 5 шт.
 						</span>
 						<span class="card_items_intro">
@@ -41,21 +41,27 @@ Flower Shop - Букет
 						</span>
 						<span class="card_items_intro">
 							Любовь флориста (бесплатно) - 1 шт.
-						</span>
+						</span> -->
 					</div>
 				</div>
 				<div class="card__elems ">
 					<span class="card__elems_intro">Размер</span>
 					<div class="card__items">
-						<span class="card_items_intro">
+						<p class="card_items_intro">
+							{{ bouquet.size }}
+						</p>
+						<!-- <span class="card_items_intro">
 							Высота - 50 см
 						</span>
 						<span class="card_items_intro">
 							Ширина - 30 см
-						</span>
+						</span> -->
 					</div>
 				</div>
-				<button class="btn largeBtn card__btn">Заказать букет</button>
+				<a href="{% url 'result' bouquet.slug %}">
+					<button class="btn largeBtn card__btn">Заказать букет</button>
+				</a>
+				<!-- <button class="btn largeBtn card__btn">Заказать букет</button> -->
 			</div>
 		</div>
 	</div>
@@ -66,7 +72,7 @@ Flower Shop - Букет
 			{% if sign_up == 'success' %}
 				<div class="title consultation__title">Отлично, скоро с вами свяжемся. А пока можете присмотреть что-нибудь из готовой коллекции</div>
 				<a href="{% url 'catalog' %}">
-					<button class="btn recommended__btn">Показать всю коллекцию</button>
+					<button class="btn recommended__btn" style="border: 1px solid #FFFFFF;">Показать всю коллекцию</button>
 				</a>
 			{% else %}
 				<div class="title consultation__title">Оставьте заявку на консультацию</div>

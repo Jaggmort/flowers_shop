@@ -5,6 +5,8 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.conf import settings
 from .notifications_bot import send_notification, unify_phone
+from django.urls import reverse
+from django.template.defaultfilters import slugify
 
 
 class Tag(models.Model):
@@ -29,6 +31,10 @@ class Bouquet(models.Model):
     composition = models.TextField(
         verbose_name='Состав букета'
     )
+    size = models.TextField(
+        verbose_name='Размер букета',
+        default='Высота - 50 см\nШирина - 30 см'
+    )
     price = models.DecimalField(
         verbose_name='Цена букета',
         max_digits=4,
@@ -45,6 +51,19 @@ class Bouquet(models.Model):
         verbose_name='Тег',
         blank=True
     )
+    slug = models.SlugField(
+        verbose_name='Название в виде url',
+        max_length=200,
+        null=True,
+        unique=True
+    )
+    def get_absolute_url(self):
+        return reverse('bouquet_detail', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.title
