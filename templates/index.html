@@ -34,16 +34,16 @@ Flower Shop
 						href="{% url 'bouquet_detail' bouquet.slug %}">
 							<div class="catalog__item_text recommended__block_elems ficb">
 								<span class="recommended__block_intro"> {{ bouquet.title }} </span>
-								<span class="recommended__block_price"> {{ bouquet.price|floatformat:0 }} </span>
+								<span class="recommended__block_price"> {{ bouquet.price|floatformat:0 }} руб</span>
 							</div>
 						</a>
 					{% endfor %}
 				</div>
+				<a href="{% url 'catalog' %}">
+					<button class="btn recommended__btn">Показать всю коллекцию</button>
+				</a>
 			</div>
 			
-			<a href="{% url 'catalog' %}">
-				<button class="btn recommended__btn">Показать всю коллекцию</button>
-			</a>
 			
 		</div>
 	</div>
