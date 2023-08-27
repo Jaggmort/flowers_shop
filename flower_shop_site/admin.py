@@ -7,7 +7,7 @@ class BouquetInline(admin.TabularInline):
 
 @admin.register(Bouquet)
 class BouquetAdmin(admin.ModelAdmin):
-    pass
+    prepopulated_fields = {'slug': ('title',)}
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
