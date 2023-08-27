@@ -28,6 +28,10 @@ class Bouquet(models.Model):
         verbose_name='Название букета',
         max_length=50
     )
+    description = models.TextField(
+        verbose_name='Описание букета',
+        default='Тут должно быть описание букета'
+    )
     composition = models.TextField(
         verbose_name='Состав букета'
     )
