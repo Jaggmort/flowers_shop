@@ -5,6 +5,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Bouquet, Consultation, Order, Tag
 from .notifications_bot import unify_phone
 from yookassa import Configuration, Payment
+from random import randint
 from pprint import pprint
 
 
@@ -78,10 +79,36 @@ def quiz_step(request):
 
 
 def quiz(request):
-    return render(request, 'quiz.html')
+    preferred_price = request.GET.get('preferred_price')
+    context = {
+        'preferred_price': preferred_price
+    }
+    return render(request, 'quiz.html', context)
 
 
-def show_quiz_result(request, slug):
+def show_quiz_result(request):
+    preferred_price = request.GET.get('preferred_price').split(' ')
+    min, max = preferred_price
+    tag = request.GET.get('tag')
+    tag_obj = Tag.objects.get(title=tag)
+    bouquets_by_tag = Bouquet.objects.filter(tags=tag_obj)
+    bouquets_by_tag_price = bouquets_by_tag.filter(
+        price__gte=int(min), price__lt=int(max)
+    )
+    if len(bouquets_by_tag_price) == 0:
+        bouquets_price_only = Bouquet.objects.filter(
+            price__gte=int(min), price__lt=int(max)
+        )
+        bouquet = bouquets_price_only[randint(0, len(bouquets_price_only)-1)]
+    else:
+        bouquet = bouquets_by_tag_price[randint(0, len(bouquets_by_tag_price)-1)]
+
+    context = {
+        'bouquet': serialize_bouquet(bouquet)
+    }
+    return render(request, 'result.html', context)
+
+def show_result(request, slug):
     context={}
     bouquet = Bouquet.objects.get(slug=slug)
     context['bouquet'] = serialize_bouquet(bouquet)
