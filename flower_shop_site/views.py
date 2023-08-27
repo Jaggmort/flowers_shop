@@ -17,6 +17,7 @@ def serialize_bouquet(bouquet: Bouquet):
         'image': bouquet.image.url,
         'slug': bouquet.slug,
         'tags': [serialize_tag(tag) for tag in bouquet.tags.all()],
+        'description': bouquet.description,
     }
 
 def serialize_tag(tag: Tag):
@@ -81,12 +82,17 @@ def quiz(request):
 
 
 def show_quiz_result(request, slug):
-    print(slug)
-    return render(request, 'result.html')
+    context={}
+    bouquet = Bouquet.objects.get(slug=slug)
+    context['bouquet'] = serialize_bouquet(bouquet)
+    return render(request, 'result.html', context)
 
 
-def make_order(request):
-    return render(request, 'order.html')
+def make_order(request, slug):
+    context = {
+        'slug': slug
+    }
+    return render(request, 'order.html', context)
 
 
 def accept_payment(request):
@@ -111,7 +117,8 @@ def make_order_step(request):
         tel = request.GET.get('tel')
         adres = request.GET.get('adres')
         time = request.GET.get('orderTime')
-        bouquet = Bouquet.objects.first()
+        slug = request.GET.get('slug')
+        bouquet = Bouquet.objects.get(slug=slug)
         order = Order.objects.create(
             bouquet=bouquet,
             client_name=fname,
