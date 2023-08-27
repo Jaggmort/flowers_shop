@@ -20,4 +20,5 @@ urlpatterns = [
     path('consultation/', views.order_consultation, name='consultation'),
     path('admin/', admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
+    path('bouquet_detail/<slug:slug>', views.card, name='bouquet_detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

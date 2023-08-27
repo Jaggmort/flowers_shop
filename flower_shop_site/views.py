@@ -2,16 +2,34 @@ import os
 import dotenv
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .models import Bouquet, Consultation, Order
+from .models import Bouquet, Consultation, Order, Tag
 from .notifications_bot import unify_phone
 from yookassa import Configuration, Payment
 
 
+def serialize_bouquet(bouquet: Bouquet):
+    return {
+        'title': bouquet.title,
+        'composition': bouquet.composition,
+        'size': bouquet.size,
+        'price': bouquet.price,
+        'image': bouquet.image.url,
+        'slug': bouquet.slug,
+        'tags': [serialize_tag(tag) for tag in bouquet.tags.all()],
+    }
+
+def serialize_tag(tag: Tag):
+    return {
+        'title': tag.title
+    }
+
+
 def index(request):
     bouquets = Bouquet.objects.order_by('?')[:3]
+
     context = {
         'is_index_page': True,
-        'bouquets': bouquets
+        'bouquets': [serialize_bouquet(bouquet) for bouquet in bouquets]
     }
     if request.method == 'POST':
         client_name = request.POST['fname']
@@ -130,3 +148,7 @@ def order_consultation(request):
             )
             context['sign_up'] = 'success'
     return render(request, 'consultation.html', context)
+
+def card(request, slug):
+    context={}
+    return render(request, 'card.html', context)

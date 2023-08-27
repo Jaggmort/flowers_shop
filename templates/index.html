@@ -29,7 +29,9 @@ Flower Shop
 			<div class="title" id="recommend">Рекомендуем</div>
 				<div class="catalog__fitwrap recommended__elems ficb recommended__elems_first">
 					{% for bouquet in bouquets %}
-						<a class="catalog__item recommended__block" style="background-image: url('{{MEDIA_URL}}{{bouquet.image}}')">
+						<a class="catalog__item recommended__block"
+						style="background-image: url({{ bouquet.image }})"
+						href="{% url 'bouquet_detail' bouquet.slug %}">
 							<div class="catalog__item_text recommended__block_elems ficb">
 								<span class="recommended__block_intro"> {{ bouquet.title }} </span>
 								<span class="recommended__block_price"> {{ bouquet.price|floatformat:0 }} </span>
@@ -70,7 +72,7 @@ Flower Shop
 					<script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Af39d7a7f1829359b6ffe21ab6356fcaeace17d528d6522dba8772f885c8b1a7d&amp;width=398&amp;height=316&amp;lang=ru_RU&amp;scroll=true"></script>
 				</div>					
 			</div>
-			<a href="{% url 'make_order' %}">
+			<a href="{% url 'quiz-step' %}">
 				<button class="btn contacts__btn">Заказать доставку</button>
 			</a>
 		</div>
